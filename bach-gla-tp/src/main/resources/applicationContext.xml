@@ -25,7 +25,7 @@
 		class="org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler" />
 
 	<bean id="simpleUrlHandlerMapping"
-			class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="urlMap">
 			<map>
 				<entry key="/resources/**" value-ref="defaultServletHttpRequestHandler" />
@@ -36,10 +36,39 @@
 	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
 
 	<mvc:annotation-driven />
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="cache" value="false" />
 		<property name="viewClass" value="org.springframework.faces.mvc.JsfView" />
 		<property name="prefix" value="/WEB-INF/views/" />
-		<property name="suffix" value=".xhtml" />
+		<property name="suffix" value=".jsp" />
 	</bean>
+
+	<bean id="applicationContextProvder" class="org.ifi.p20.gla.common.ApplicationContextProvider" />
+	<!-- Hibernate -->
+	<!-- -->
+
+	<!-- Auto scan the components -->
+	<context:component-scan base-package="org.ifi.p20.gla.data" />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/genie_logiciel_avance" />
+		<property name="username" value="root" />
+		<property name="password" value="1" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="testPU" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> </bean> 
+		
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
 </beans>
